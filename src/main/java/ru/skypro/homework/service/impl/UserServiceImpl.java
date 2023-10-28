@@ -33,22 +33,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
 
-    public Optional<UserModel> findUser(){
+    public Optional<UserModel> findUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         return userRepo.findByUserName(currentPrincipalName);
     }
+
     /**
      * Чтение информации о пользователе
      */
     @Override
     public UserDTO getUser() {
-       Optional<UserModel> currentUser = findUser();
-       UserDTO userDTO = new UserDTO();
-       if(currentUser.isPresent()){
-           userDTO = UserMapper.mapToUserDTO(currentUser.get());
-       }
-       return userDTO;
+        Optional<UserModel> currentUser = findUser();
+        UserDTO userDTO = new UserDTO();
+        if (currentUser.isPresent()) {
+            userDTO = UserMapper.mapToUserDTO(currentUser.get());
+        }
+        return userDTO;
     }
 
     /**
@@ -56,10 +57,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updatePassword(NewPassword newPassword) {
-
-        var password1 = newPassword.getCurrentPassword();
-        var newPassword1 = encoder.encode(newPassword.getNewPassword());
-//        userDetailsManager.changePassword(password1, newPassword1);
+        UserModel userModel = findUser().orElseThrow();
+        boolean currentUserPassword = encoder.matches(newPassword.getCurrentPassword(), userModel.getPassword());
+        if (currentUserPassword) {
+            userModel.setPassword(encoder.encode(newPassword.getNewPassword()));
+            userRepo.save(userModel);
+        }
     }
 
     /**
@@ -69,8 +72,8 @@ public class UserServiceImpl implements UserService {
     public UpdateUser updateUser(UpdateUser updateUser) {
         Optional<UserModel> currentUser = findUser();
         UserModel userModel = new UserModel();
-        if(currentUser.isPresent()){
-            userModel=currentUser.get();
+        if (currentUser.isPresent()) {
+            userModel = currentUser.get();
             userModel.setFirstName(updateUser.getFirstName());
             userModel.setLastName(updateUser.getLastName());
             userModel.setPhone(updateUser.getPhone());
