@@ -8,13 +8,15 @@ import ru.skypro.homework.projections.NewPassword;
 import ru.skypro.homework.projections.Register;
 import ru.skypro.homework.projections.UpdateUser;
 
-public interface UserService {
+import java.util.Optional;
 
-    UserDTO getUser(Authentication authentication);
+public interface UserService {
+    Optional<UserModel> findUser();
+    UserDTO getUser();
 
     void updatePassword(NewPassword newPassword);
 
-    UpdateUser updateUser(UpdateUser updateUser, Authentication authentication);
+    UpdateUser updateUser(UpdateUser updateUser);
 
     String update(String image);
 }

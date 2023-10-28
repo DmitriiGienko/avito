@@ -23,9 +23,8 @@ public class UserController {
 
     // Получение пользователя
     @GetMapping("/me")
-    public UserDTO getUser(Authentication authentication) {
-//        return ResponseEntity.ok(new UserDTO(0, "fe@mail.ru", "nameForTest", "LastnameForTest", "+79999999999", Role.USER.name(), null));
-        return userService.getUser(authentication);
+    public UserDTO getUser() {
+        return userService.getUser();
     }
 
 
@@ -35,8 +34,8 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public UpdateUser updateUser(@RequestBody UpdateUser updateUser, Authentication authentication) {
-        return userService.updateUser(updateUser, authentication);
+    public UpdateUser updateUser(@RequestBody UpdateUser updateUser) {
+        return userService.updateUser(updateUser);
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

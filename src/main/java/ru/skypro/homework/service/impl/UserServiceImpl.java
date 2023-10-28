@@ -19,6 +19,7 @@ import ru.skypro.homework.service.until.Until;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 //@Transactional
@@ -32,17 +33,22 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
 
+    public Optional<UserModel> findUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        return userRepo.findByUserName(currentPrincipalName);
+    }
     /**
      * Чтение информации о пользователе
      */
     @Override
-    public UserDTO getUser(Authentication authentication) {
-        AdsUserDetails adsUserDetails = (AdsUserDetails) authentication.getPrincipal();
-
-        return UserMapper.mapToUserDTO(
-                Objects.requireNonNull(userRepo
-                        .findByUserName(adsUserDetails.getUser()
-                                .getUserName()).orElse(null)));
+    public UserDTO getUser() {
+       Optional<UserModel> currentUser = findUser();
+       UserDTO userDTO = new UserDTO();
+       if(currentUser.isPresent()){
+           userDTO = UserMapper.mapToUserDTO(currentUser.get());
+       }
+       return userDTO;
     }
 
     /**
@@ -59,27 +65,18 @@ public class UserServiceImpl implements UserService {
     /**
      * Обновление информации о пользователе
      */
-    // change!!
     @Override
-    public UpdateUser updateUser(UpdateUser updateUser, Authentication authentication) {
-//        UserDTO userDTO = getUser(authentication);
-//
-//        userDTO.setLastName(updateUser.getLastName());
-//        userDTO.setFirstName(updateUser.getFirstName());
-//        userDTO.setPhone(updateUser.getPhone());
-//
-//
-//        UserModel userModel = UserMapper.mapToUserModel(userDTO);
-//        userRepo.save(userModel);
-
-        UserModel user = Until.addUserFromRepo(authentication);
-
-        user.setFirstName(updateUser.getFirstName());
-        user.setLastName(updateUser.getLastName());
-        user.setPhone(updateUser.getPhone());
-
-        userRepo.save(user);
-        return UserMapper.mapToUpdateUser(user);
+    public UpdateUser updateUser(UpdateUser updateUser) {
+        Optional<UserModel> currentUser = findUser();
+        UserModel userModel = new UserModel();
+        if(currentUser.isPresent()){
+            userModel=currentUser.get();
+            userModel.setFirstName(updateUser.getFirstName());
+            userModel.setLastName(updateUser.getLastName());
+            userModel.setPhone(updateUser.getPhone());
+            userRepo.save(userModel);
+        }
+        return UserMapper.mapToUpdateUser(userModel);
     }
 
     /**
