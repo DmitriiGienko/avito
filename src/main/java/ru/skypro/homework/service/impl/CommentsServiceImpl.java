@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 //@Transactional
 @RequiredArgsConstructor
 public class CommentsServiceImpl implements CommentsService {
-
+    private final UserServiceImpl userService;
     private final CommentRepo commentRepo;
     private final AdServiceImpl adService;
     private final AdRepo adRepo;
@@ -44,11 +44,17 @@ public class CommentsServiceImpl implements CommentsService {
      */
     @Override
     public Comments getComments(int id) {
-        CommentModel commentModel = commentRepo.findById(id).orElseThrow(EntityNotFoundException::new);
-        return CommentMapper.toComments(commentModel);
+        List<CommentDTO> comments = commentRepo.findById(id)
+                .stream()
+                .map(CommentMapper::toCommentDTO)
+                .collect(Collectors.toList());
+        if (comments.isEmpty())
+            throw new CommentNotFoundException();
+        else
+            return CommentMapper.toComments((CommentModel) comments);
     }
-
-    public Comments getAllComments(int adId) {
+    @Override
+    public Comments getAllComments ( int adId){
         adService.getAds(adId);
         List<CommentDTO> commentsDTOList = commentRepo.findAll().stream().map(CommentMapper::toCommentDTO).collect(Collectors.toList());
         return new Comments(commentsDTOList, commentsDTOList.size());
@@ -59,18 +65,16 @@ public class CommentsServiceImpl implements CommentsService {
      * Создание комментария
      */
     @Override
-    public CommentDTO addComment(int id, CreateOrUpdateComment createOrUpdateComment, Authentication authentication) {
-        UserModel user = Until.addUserFromRepo(authentication);
+    public CommentDTO addComment(int id, CreateOrUpdateComment createOrUpdateComment) {
+        UserModel user = userService.findUser().get();
+        AdModel adModel = adRepo.findById(id).orElseThrow();
 
-//        UserModel user = userRepo.findByUserName(authentication.getName())
-//                .orElseThrow(UserNotFoundException::new);
         CommentModel commentModel = new CommentModel();
+        commentModel.setAdModel(adModel);
+        commentModel.setText(createOrUpdateComment.getText());
         commentModel.setCreateAt(LocalDateTime.parse(LocalDateTime.now()
                 .format(DateTimeFormatter.ISO_DATE_TIME)));
-        commentModel.setText(createOrUpdateComment.getText());
         commentModel.setUserModel(user);
-        commentModel.setAdModel(adRepo.findById(id)
-                .orElseThrow(AdNotFoundException::new));
         commentRepo.save(commentModel);
         return CommentMapper.toCommentDTO(commentModel);
     }
@@ -79,8 +83,11 @@ public class CommentsServiceImpl implements CommentsService {
      * Удаление коментария
      */
     @Override
-    public void deleteComment(int id, int commentsId) {
-        Optional<AdModel> adModel = adRepo.findById(id);
+    public void deleteComment(int adId, int commentsId) {
+        if (commentsId > getComments(adId).getResults().size()
+                || commentsId <= 0) {
+            throw new CommentNotFoundException();
+        }
         commentRepo.deleteById(commentsId);
     }
 
@@ -88,13 +95,14 @@ public class CommentsServiceImpl implements CommentsService {
      * Редактирование комментария
      */
     @Override
-    public CreateOrUpdateComment updateComment(int id, int commentsId, CreateOrUpdateComment createOrUpdateComment) {
-        Optional<AdModel> ad = adRepo.findById(id);
-        if (ad.isPresent()) {
-            Comments comments = getComments(commentsId);
-            return CommentMapper.toCreateOrUpdateComment(comments);
-        } else {
+    public Comments updateComment(int adId, int commentsId, CreateOrUpdateComment createOrUpdateComment) {
+        if (commentsId > getComments(adId).getResults().size() || commentsId <= 0) {
             throw new CommentNotFoundException();
         }
+        CommentModel updateComment=commentRepo.findById(commentsId).orElseThrow();
+        updateComment.setText(createOrUpdateComment.getText());
+        commentRepo.save(updateComment);
+        return CommentMapper.toComments(updateComment);
+        }
     }
-}
+

@@ -25,20 +25,18 @@ public class СommentsController {
 
     @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDTO> addComment(@PathVariable int id,
-                                                 @RequestBody CreateOrUpdateComment createOrUpdateComment,
-                                                 Authentication authentication) {
-        return ResponseEntity.ok(commentsService.addComment(id, createOrUpdateComment, authentication));
+                                                 @RequestBody CreateOrUpdateComment createOrUpdateComment) {
+        return ResponseEntity.ok(commentsService.addComment(id, createOrUpdateComment));
     }
 
     @DeleteMapping("/{adId}/comments/{commentId}")
     public void deleteComment(@PathVariable int adId, @PathVariable int commentId) {
-        System.out.println("Удаление комментария ");
+       commentsService.deleteComment(adId,commentId);
 
     }
 
     @PatchMapping("/{adId}/comments/{commentId}")
-    public CreateOrUpdateComment updateComment(@PathVariable int adId, @PathVariable int commentId, @RequestBody CreateOrUpdateComment createOrUpdateComment) {
-        System.out.println("Обновление комментария");
+    public Comments updateComment(@PathVariable int adId, @PathVariable int commentId, @RequestBody CreateOrUpdateComment createOrUpdateComment) {
         return commentsService.updateComment(adId, commentId, createOrUpdateComment);
     }
 }

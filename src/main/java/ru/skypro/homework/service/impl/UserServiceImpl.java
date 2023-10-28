@@ -25,8 +25,6 @@ import java.util.Optional;
 //@Transactional
 
 public class UserServiceImpl implements UserService {
-//    @Autowired
-//    private  UserDetailsManager userDetailsManager;
 
     @Autowired
     private PasswordEncoder encoder;

@@ -8,9 +8,9 @@ import ru.skypro.homework.projections.CreateOrUpdateComment;
 public interface CommentsService {
     Comments getComments(int id);
     Comments getAllComments(int adId);
-    CommentDTO addComment(int id, CreateOrUpdateComment createOrUpdateComment, Authentication authentication);
+    CommentDTO addComment(int id, CreateOrUpdateComment createOrUpdateComment);
     void deleteComment(int id, int commentsId);
-    CreateOrUpdateComment updateComment(int id, int commentsId, CreateOrUpdateComment createOrUpdateComment);
+    Comments updateComment(int id, int commentsId, CreateOrUpdateComment createOrUpdateComment);
 
 
 }
