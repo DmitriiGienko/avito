@@ -36,4 +36,7 @@ public class AdModel {
     @OneToMany(mappedBy = "adModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentModel> commentModels;
 
+    @OneToOne(mappedBy="adModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ImageModel imageModel;
+
 }

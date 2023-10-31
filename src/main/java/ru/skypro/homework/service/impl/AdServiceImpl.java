@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.exceptions.AdNotFoundException;
 import ru.skypro.homework.mapper.AdMapper;
@@ -42,7 +43,7 @@ public class AdServiceImpl implements AdService {
     /**
      * создание объявления
      */
-    public AdDTO addAd(CreateOrUpdateAd createOrUpdateAd, String pathImage, String user) {
+    public AdDTO addAd(CreateOrUpdateAd createOrUpdateAd, MultipartFile multipartFile, String user) {
         AdModel adModel = new AdModel();
         adModel.setImage("Test-path"); // потом удалить
 //        adModel.setImage(pathImage);

@@ -8,4 +8,7 @@ databaseChangeLog:
   - include:
       file: liquibase/changesets/create_comment_table.yml
 
+  - include:
+      file: liquibase/changesets/create_image_table.yml
+
 
