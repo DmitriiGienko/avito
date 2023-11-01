@@ -8,8 +8,8 @@ databaseChangeLog:
             columns:
               - column:
                   name: image_id
-                  type: int
-                  autoIncrement: true
+                  type: varchar(255)
+#                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false

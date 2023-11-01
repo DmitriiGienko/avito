@@ -1,6 +1,7 @@
 package ru.skypro.homework.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -9,14 +10,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "image")
+@Data
 public class ImageModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
-    private int id;
+    private String id;
 
     @Column(name = "bytes")
+    @Lob
     private byte[] bytes;
 
     @OneToOne(fetch = FetchType.LAZY)

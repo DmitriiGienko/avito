@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.model.AdsUserDetails;
+import ru.skypro.homework.model.ImageModel;
 import ru.skypro.homework.projections.Ads;
 import ru.skypro.homework.projections.CreateOrUpdateAd;
 import ru.skypro.homework.projections.ExtendedAd;
+import ru.skypro.homework.repository.ImageRepo;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.UUID;
 
 
 @CrossOrigin(value = "http://localhost:3000")
@@ -23,6 +27,7 @@ import javax.validation.Valid;
 public class AdController {
 
     private final AdServiceImpl adService;
+    private final ImageRepo imageRepo;
 
 
     //    Получение всех объявлений
@@ -37,7 +42,18 @@ public class AdController {
                                        @RequestPart MultipartFile image,
                                        Authentication authentication) {
         AdsUserDetails adsUserDetails = (AdsUserDetails) authentication.getPrincipal();
-        return ResponseEntity.ok(adService.addAd(createOrUpdateAdDTO, image, adsUserDetails.getUser().getUserName()));
+        ImageModel imageModel = new ImageModel();
+        imageModel.setId(UUID.randomUUID().toString());
+        try {
+            byte[] bytes = image.getBytes();
+            imageModel.setBytes(bytes);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        imageModel = imageRepo.save(imageModel);
+//        return imageModel.getId();
+        return ResponseEntity.ok(adService.addAd(createOrUpdateAdDTO, (MultipartFile) imageModel, adsUserDetails.getUser().getUserName()));
     }
 
 
