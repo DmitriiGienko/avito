@@ -35,8 +35,9 @@ public class UserModel {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "image")
-    private String image;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     @Column(name = "role", nullable = false)
     private Role role;
@@ -49,13 +50,5 @@ public class UserModel {
             fetch = FetchType.LAZY)
     private List<CommentModel> commentModels;
 
-    public UserModel(int id, String userName, String firstName, String lastName, String phone, String image, Role role) {
-        this.id = id;
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.image = image;
-        this.role = role;
-    }
+
 }

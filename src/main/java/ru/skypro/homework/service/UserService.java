@@ -20,5 +20,5 @@ public interface UserService {
 
     UpdateUser updateUser(UpdateUser updateUser);
 
-    String update(String image);
+    void updateUserImage(MultipartFile image);
 }

@@ -1,23 +1,27 @@
 package ru.skypro.homework.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.exceptions.UserNotFoundException;
 import ru.skypro.homework.mapper.UserMapper;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.UserModel;
 import ru.skypro.homework.projections.NewPassword;
 import ru.skypro.homework.projections.UpdateUser;
 import ru.skypro.homework.repository.UserRepo;
+import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 import ru.skypro.homework.service.util.Util;
 
 import java.util.Optional;
 
-
+@AllArgsConstructor
 @Service
 //@Transactional
 
@@ -27,9 +31,11 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder encoder;
     @Autowired
     private UserRepo userRepo;
-
+    private final ImageService imageService;
     @Autowired
     private Util util;
+
+
 
     public Optional<UserModel> findUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -81,7 +87,16 @@ public class UserServiceImpl implements UserService {
      * Обновление аватара  пользователя
      */
     @Override
-    public String update(String image) {
-        return "pathImage";
+    public void updateUserImage(MultipartFile image) {
+        UserModel user = findUser().orElseThrow();
+        Image oldImage = user.getImage();
+        if (oldImage == null) {
+            Image newImage = imageService.createImage(image);
+            user.setImage(newImage);
+        } else {
+            Image updatedImage = imageService.updateImage(image, oldImage);
+            user.setImage(updatedImage);
+        }
+        userRepo.save(user);
     }
 }
