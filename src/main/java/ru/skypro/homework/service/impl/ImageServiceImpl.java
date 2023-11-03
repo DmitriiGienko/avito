@@ -2,6 +2,7 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,8 +11,12 @@ import ru.skypro.homework.repository.ImageRepo;
 
 import ru.skypro.homework.service.ImageService;
 
+import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.UUID;
 
 @Service
@@ -39,6 +44,11 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image updateImage(MultipartFile newImage, Image image) {
+
+        //            BufferedImage bImage = ImageIO.read(new File("sample.jpg"));
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            ImageIO.write(bImage, "jpg", bos );
+//            byte [] data = bos.toByteArray();
 
         try {
             byte[] bytes = newImage.getBytes();

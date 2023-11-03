@@ -9,6 +9,7 @@ import ru.skypro.homework.projections.NewPassword;
 import ru.skypro.homework.projections.Register;
 import ru.skypro.homework.projections.UpdateUser;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public interface UserService {
@@ -20,5 +21,5 @@ public interface UserService {
 
     UpdateUser updateUser(UpdateUser updateUser);
 
-    void updateUserImage(MultipartFile image);
+    String updateUserImage(MultipartFile image) throws IOException;
 }

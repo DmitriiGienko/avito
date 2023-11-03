@@ -13,6 +13,7 @@ import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.impl.UserServiceImpl;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -40,8 +41,8 @@ public class UserController {
     }
 
     @PatchMapping("/me/image")
-    public ResponseEntity<byte[]> updateUserImage(
-            @RequestPart MultipartFile image) {
+    public ResponseEntity<String> updateUserImage(
+            @RequestPart MultipartFile image) throws IOException {
         userService.updateUserImage(image);
         return ResponseEntity.ok().build();
     }

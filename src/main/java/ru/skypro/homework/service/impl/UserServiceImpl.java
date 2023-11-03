@@ -14,11 +14,14 @@ import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.UserModel;
 import ru.skypro.homework.projections.NewPassword;
 import ru.skypro.homework.projections.UpdateUser;
+import ru.skypro.homework.repository.ImageRepo;
 import ru.skypro.homework.repository.UserRepo;
 import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 import ru.skypro.homework.service.util.Util;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -34,8 +37,8 @@ public class UserServiceImpl implements UserService {
     private final ImageService imageService;
     @Autowired
     private Util util;
-
-
+    @Autowired
+    ImageRepo imageRepo;
 
     public Optional<UserModel> findUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -87,16 +90,38 @@ public class UserServiceImpl implements UserService {
      * Обновление аватара  пользователя
      */
     @Override
-    public void updateUserImage(MultipartFile image) {
+    public String updateUserImage(MultipartFile image) throws IOException {
+
+//        public boolean patchAuthorizedUserPicture(MultipartFile image) {
+
+//            try {
+//                byte[] imageBytes = image.getBytes();
+//                Image multipartToEntity = new Image();
+//                multipartToEntity.setBytes(imageBytes);
+//                imageRepo.save(multipartToEntity);
+//                authorizedUser.setImageAvatar(multipartToEntity);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            userRepository.save(authorizedUser);
+
         UserModel user = findUser().orElseThrow();
         Image oldImage = user.getImage();
         if (oldImage == null) {
             Image newImage = imageService.createImage(image);
             user.setImage(newImage);
         } else {
-            Image updatedImage = imageService.updateImage(image, oldImage);
-            user.setImage(updatedImage);
+
+            Image image1 = imageRepo.findById(user.getImage().getId()).orElseThrow(UserNotFoundException::new);
+
+            image1.setBytes(image.getBytes());
+
+//            Image updatedImage = imageService.updateImage(image, oldImage);
+//            user.setImage(updatedImage);
         }
-        userRepo.save(user);
+//        userRepo.save(user);
+        return UserMapper.mapToUserDTO(user).getImage();
+
     }
+
 }
