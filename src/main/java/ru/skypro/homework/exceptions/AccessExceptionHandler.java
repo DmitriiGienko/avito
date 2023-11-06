@@ -12,6 +12,6 @@ public class AccessExceptionHandler {
     public ResponseEntity<?> handleNotFound(AccessErrorException e) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body("Forbidden");
+                .body("У Вас нет прав на изменение объявления!");
     }
 }

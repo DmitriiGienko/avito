@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static ru.skypro.homework.mapper.AdMapper.getExtendedAd;
 import static ru.skypro.homework.mapper.AdMapper.toAdDto;
+
 @Slf4j
 @Service
 public class AdServiceImpl implements AdService {
@@ -119,7 +120,7 @@ public class AdServiceImpl implements AdService {
         if (!isAllowed(authentication, adModel)) {
             throw new AccessErrorException();
         }
-        log.info("Объявлене удалено");
+        log.info("Объявление удалено");
         adRepo.deleteById(id);
     }
 
@@ -128,6 +129,9 @@ public class AdServiceImpl implements AdService {
      */
     @Override
     public Ads getAdsMe(int userId) {
+        if (userRepo.findById(userId).isEmpty()) {
+            throw new UserNotFoundException();
+        }
         List<AdDTO> list = adRepo.findAll().stream()
                 .filter(adModel -> adModel.getUserModel().getId() == userId)
                 .map(AdMapper::toAdDto)

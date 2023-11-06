@@ -12,7 +12,7 @@ public class UserExceptionHandler {
     public ResponseEntity<?> handleNotFound(UserNotFoundException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body("Not found");
+                .body("Пользователь не найден");
     }
 
     @ExceptionHandler(ForbiddenException.class)
