@@ -217,6 +217,4 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
 
     }
-
-
 }

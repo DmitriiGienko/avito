@@ -34,4 +34,10 @@ public class CommentModel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_id")
     private AdModel adModel;
+
+    public CommentModel(int pk, LocalDateTime createAt, String text) {
+        this.pk = pk;
+        this.createAt = createAt;
+        this.text = text;
+    }
 }

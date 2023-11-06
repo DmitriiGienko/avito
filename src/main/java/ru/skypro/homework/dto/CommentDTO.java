@@ -34,4 +34,11 @@ public class CommentDTO {
     @NotBlank(message = "Обязательное поле")
     @Size(min = 8, max = 64, message = "Количество символов от 8 до 64")
     private String text;
+
+    public CommentDTO(int pk, int author, String authorFirstName, String text) {
+        this.pk = pk;
+        this.author = author;
+        this.authorFirstName = authorFirstName;
+        this.text = text;
+    }
 }
