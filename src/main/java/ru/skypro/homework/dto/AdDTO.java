@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 public class AdDTO {
 
     @NotBlank(message = "Обязательное поле")
-    private int author; //id автора объявления
+    private int author;
 
     private String image;
 

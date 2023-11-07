@@ -17,7 +17,6 @@ public class AdMapper {
         adDTO.setAuthor(adModel.getUserModel().getId());
         Optional.ofNullable(adModel.getImage()).ifPresent(image -> adDTO.setImage(
                 "/image/" + adModel.getImage().getId()));
-//        adDTO.setImage("/image/" + adModel.getImage().getId());
         return adDTO;
     }
 

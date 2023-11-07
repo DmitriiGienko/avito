@@ -24,5 +24,5 @@ public class UpdateUser {
     @NotBlank(message = "Обязательное поле")
     @Pattern(regexp = ("\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}"),
             message = "Укажите номер в формате +7----------")
-    private String phone; //	pattern: \+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}
+    private String phone;
 }
