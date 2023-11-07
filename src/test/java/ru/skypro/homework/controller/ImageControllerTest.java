@@ -179,8 +179,6 @@ class ImageControllerTest {
                         })))
                 .andExpect(status().isForbidden())
                 .andExpect(content().string("У Вас нет прав на изменение объявления!"));
-
-
     }
 
     @DisplayName("Пользователь не аутентифицирован")
@@ -205,7 +203,7 @@ class ImageControllerTest {
     @Test
     void shouldNotUpdateImage_notFound() throws Exception {
         addToDb();
-        int id = adRepository.findAdByTitle("Title1").get().getPk()+1;
+        int id = adRepository.findAdByTitle("Title1").get().getPk() + 1;
         ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
         MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
         mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
@@ -222,7 +220,41 @@ class ImageControllerTest {
     }
 
 
+    @DisplayName("Обновление аватарки пользователя")
     @Test
-    void updateUserImage() {
+    void shouldUpdateUserImage_Ok() throws Exception {
+        addToDb();
+        ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
+        MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
+        mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
+        mockMvc.perform(multipart("/users/me/image")
+                        .part(mockPart)
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1"))
+                        .accept(MediaType.MULTIPART_FORM_DATA_VALUE)
+                        .with((request -> {
+                            request.setMethod("PATCH");
+                            return request;
+                        })))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("Обновление аватарки не аутентифицированного пользователя")
+    @Test
+    void shouldNotUpdateUserImage_Unauthorized() throws Exception {
+        addToDb();
+        ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
+        MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
+        mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
+        mockMvc.perform(multipart("/users/me/image")
+                        .part(mockPart)
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user5@mail.ru", "password1"))
+                        .accept(MediaType.MULTIPART_FORM_DATA_VALUE)
+                        .with((request -> {
+                            request.setMethod("PATCH");
+                            return request;
+                        })))
+                .andExpect(status().isUnauthorized());
     }
 }
