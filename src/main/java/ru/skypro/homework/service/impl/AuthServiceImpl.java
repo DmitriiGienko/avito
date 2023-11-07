@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
         if (manager.loadUserByUsername(userName) == null) {
             return false;
         }
-        log.info("Пользователь авторизирован");
+        log.info("Пользователь {} авторизирован", userName);
         UserDetails userDetails = manager.loadUserByUsername(userName);
         return encoder.matches(password, userDetails.getPassword());
     }
@@ -58,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
         }
         if (validRegister(register)) {
             manager.createUser(register);
+            log.info("Пользователь {} зарегистрирован", register.getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -72,6 +73,8 @@ public class AuthServiceImpl implements AuthService {
         if (validLogin(login.getUsername(), login.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
+            log.error("Ошибка аутентификации - {}", login.getUsername());
+
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }

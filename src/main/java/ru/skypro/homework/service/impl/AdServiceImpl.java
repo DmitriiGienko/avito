@@ -64,19 +64,20 @@ public class AdServiceImpl implements AdService {
         try {
             imageModel.setBytes(file.getBytes());
         } catch (IOException e) {
+            log.error("Ошибка добавлена картинки");
             throw new RuntimeException(e);
         }
         imageRepo.save(imageModel);
-        log.info("Сохранили картинку к объявлению");
 
         AdModel adModel = new AdModel();
         adModel.setImage(imageModel);
         adModel.setPrice(properties.getPrice());
         adModel.setTitle(properties.getTitle());
+        log.info("Добавлена картинка к объявлению {}", adModel.getTitle());
         adModel.setDescription(properties.getDescription());
         adModel.setUserModel(adsUserDetails.getUser());
         adRepo.save(adModel);
-        log.info("Создали объявление");
+        log.info("{} добавил объявление", authentication.getName());
         return AdMapper.toAdDto(adModel);
     }
 
@@ -87,7 +88,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public ExtendedAd getAds(int id) {
         AdModel ad = adRepo.findById(id).orElseThrow(AdNotFoundException::new);
-        log.info("Получение полной информации объявления");
+        log.info("Получение полной информации по объявлению {}", ad.getTitle());
         return getExtendedAd(ad);
     }
 
@@ -105,7 +106,7 @@ public class AdServiceImpl implements AdService {
         adModel.setPrice(createOrUpdateAdDTO.getPrice());
         adModel.setDescription(createOrUpdateAdDTO.getDescription());
         adRepo.saveAndFlush(adModel);
-        log.info("Изменение объявления");
+        log.info("Изменение объявления {}", adModel.getTitle());
         return toAdDto(adModel);
     }
 
@@ -120,7 +121,7 @@ public class AdServiceImpl implements AdService {
         if (!isAllowed(authentication, adModel)) {
             throw new AccessErrorException();
         }
-        log.info("Объявление удалено");
+        log.info("Объявление {} удалено", adModel.getTitle());
         adRepo.deleteById(id);
     }
 
@@ -147,7 +148,7 @@ public class AdServiceImpl implements AdService {
     public boolean isAllowed(Authentication authentication, AdModel ad) {
         UserModel user = userRepo.findByUserName(authentication.getName())
                 .orElseThrow(UserNotFoundException::new);
-        log.info("Доступ разрешен к работе с объявлениям");
+        log.info("Проверка аутентификации {} - Ок", user.getUserName());
         return user.getId() == ad.getUserModel().getId() || user.getRole().equals(Role.ADMIN);
     }
 

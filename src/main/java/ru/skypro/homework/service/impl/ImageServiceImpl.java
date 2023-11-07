@@ -68,7 +68,7 @@ public class ImageServiceImpl implements ImageService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.info("Картинка объявления изменена");
+        log.info("Картинка объявления {} изменена", imageModel.getId());
         imageRepo.saveAndFlush(imageModel);
         return ("/image/" + imageModel.getId());
     }
@@ -90,14 +90,14 @@ public class ImageServiceImpl implements ImageService {
         try {
             byte[] imageBytes = file.getBytes();
             imageModel.setBytes(imageBytes);
+
         } catch (IOException e) {
             throw new RuntimeException();
         }
-
         imageRepo.saveAndFlush(imageModel);
         userModel.setImage(imageModel);
         userRepo.save(userModel);
-        log.info("Аватарка пользователя обновлена");
+        log.info("Аватарка пользователя {} изменена", authentication.getName());
         return ("/image/" + imageModel.getId());
     }
 
@@ -107,7 +107,7 @@ public class ImageServiceImpl implements ImageService {
     public boolean isAllowed(Authentication authentication, AdModel adModel) {
         UserModel user = userRepo.findByUserName(authentication.getName())
                 .orElseThrow(UserNotFoundException::new);
-        log.info("Доступ разрешен к работе с объявлениям");
+        log.info("Доступ разрешен к работе с объявлениям для пользователя {}", authentication.getName());
         return user.getId() == adModel.getUserModel().getId() || user.getRole().equals(Role.ADMIN);
     }
 
