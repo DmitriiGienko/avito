@@ -9,11 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.exceptions.AccessErrorException;
 import ru.skypro.homework.exceptions.AdNotFoundException;
 import ru.skypro.homework.exceptions.ImageNotFoundException;
 import ru.skypro.homework.exceptions.UserNotFoundException;
 import ru.skypro.homework.model.AdModel;
 import ru.skypro.homework.model.ImageModel;
+import ru.skypro.homework.model.Role;
 import ru.skypro.homework.model.UserModel;
 import ru.skypro.homework.repository.AdRepo;
 import ru.skypro.homework.repository.ImageRepo;
@@ -24,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
+
 @Slf4j
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -52,8 +55,12 @@ public class ImageServiceImpl implements ImageService {
      */
     @Transactional
     @Override
-    public String updateImage(int id, MultipartFile file) {
+    public String updateImage(int id, MultipartFile file, Authentication authentication) {
         AdModel ad = adRepo.findById(id).orElseThrow(AdNotFoundException::new);
+
+        if (!isAllowed(authentication, ad)) {
+            throw new AccessErrorException();
+        }
 
         ImageModel imageModel = imageRepo.findById(ad.getImage().getId()).orElseThrow(ImageNotFoundException::new);
         try {
@@ -92,6 +99,16 @@ public class ImageServiceImpl implements ImageService {
         userRepo.save(userModel);
         log.info("Аватарка пользователя обновлена");
         return ("/image/" + imageModel.getId());
+    }
+
+    /**
+     * Проверка доступа к работе с картинками
+     */
+    public boolean isAllowed(Authentication authentication, AdModel adModel) {
+        UserModel user = userRepo.findByUserName(authentication.getName())
+                .orElseThrow(UserNotFoundException::new);
+        log.info("Доступ разрешен к работе с объявлениям");
+        return user.getId() == adModel.getUserModel().getId() || user.getRole().equals(Role.ADMIN);
     }
 
 }
