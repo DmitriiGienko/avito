@@ -29,8 +29,9 @@ public class ImageController {
      */
     @PatchMapping("/ads/{id}/image")
     public ResponseEntity<String> updateImage(@PathVariable int id,
-                                              @RequestPart("image") MultipartFile image) {
-        return ResponseEntity.ok(imageService.updateImage(id, image));
+                                              @RequestPart("image") MultipartFile image,
+                                              Authentication authentication) {
+        return ResponseEntity.ok(imageService.updateImage(id, image, authentication));
     }
 
     /**
