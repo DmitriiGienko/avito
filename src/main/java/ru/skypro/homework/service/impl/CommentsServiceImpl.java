@@ -78,7 +78,7 @@ public class CommentsServiceImpl implements CommentsService {
                 .format(DateTimeFormatter.ISO_DATE_TIME)));
         commentModel.setUserModel(user);
         commentRepo.save(commentModel);
-        log.info("Комментарий создан");
+        log.info("Комментарий к объявлению {} создан", adModel.getTitle());
         return CommentMapper.toCommentDTO(commentModel);
     }
 
@@ -91,7 +91,7 @@ public class CommentsServiceImpl implements CommentsService {
         if (!isAllowed(authentication, comment)) {
             throw new AccessErrorException();
         }
-        log.info("Комментарий удален");
+        log.info("Комментарий удален пользователем {}", authentication.getName());
         commentRepo.deleteById(commentsId);
     }
 
@@ -109,7 +109,7 @@ public class CommentsServiceImpl implements CommentsService {
         }
         comment.setText(createOrUpdateComment.getText());
         commentRepo.save(comment);
-        log.info("Комментарий изменен");
+        log.info("Комментарий изменен пользователем {}", authentication.getName());
         return toCommentDTO(comment);
     }
 
@@ -120,7 +120,7 @@ public class CommentsServiceImpl implements CommentsService {
     public boolean isAllowed(Authentication authentication, CommentModel comment) {
         UserModel user = userRepo.findByUserName(authentication.getName())
                 .orElseThrow(UserNotFoundException::new);
-        log.info("Доступ к работе с комментариями разрешен");
+        log.info("Доступ к работе с комментариями разрешен для {}", authentication.getName());
         return user.getId() == comment.getUserModel().getId() || user.getRole().equals(Role.ADMIN);
     }
 

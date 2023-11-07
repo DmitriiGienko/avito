@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public Optional<UserModel> findUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        log.info("Пользователь авторизован");
+        log.info("Пользователь {} авторизован", authentication.getName());
         return userRepo.findByUserName(currentPrincipalName);
 
     }
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         } catch (UserNotFoundException e) {
             throw new UserNotFoundException();
         }
-        log.info("Пользователь есть в БД");
+        log.info("Пользователь {} есть в БД", userModel.getUserName());
         return true;
     }
 
@@ -73,8 +73,8 @@ public class UserServiceImpl implements UserService {
         if (currentUserPassword) {
             userModel.setPassword(encoder.encode(newPassword.getNewPassword()));
             userRepo.save(userModel);
+            log.info("Пароль пользователя {} изменен", userModel.getUserName());
         } else throw new ForbiddenException();
-        log.info("Пароль изменен");
     }
 
     /**
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
             userModel.setPhone(updateUser.getPhone());
             userRepo.save(userModel);
         }
-        log.info("Данные пользователя изменены");
+        log.info("Данные пользователя {} изменены", userModel.getUserName());
         return UserMapper.mapToUpdateUser(userModel);
     }
 
