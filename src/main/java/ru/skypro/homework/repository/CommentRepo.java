@@ -6,8 +6,9 @@ import ru.skypro.homework.model.AdModel;
 import ru.skypro.homework.model.CommentModel;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CommentRepo extends JpaRepository<CommentModel, Integer> {
-
+    Optional<CommentModel> findCommentsByText(String text);
 }

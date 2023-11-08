@@ -1,6 +1,7 @@
 package ru.skypro.homework.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,8 +41,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @Testcontainers
@@ -123,7 +123,7 @@ public class CommentControllerTest {
         CommentModel commentModel = new CommentModel();
         commentModel.setPk(1);
         commentModel.setCreateAt(LocalDateTime.now());
-        commentModel.setText("Test text");
+        commentModel.setText("TestTestTest");
         commentModel.setUserModel(userRepository.findByUserName("user1@mail.ru").orElseThrow(null));
         commentModel.setAdModel(adModel);
         commentRepo.save(commentModel);
@@ -136,63 +136,277 @@ public class CommentControllerTest {
         commentRepo.deleteAll();
     }
 
-    @DisplayName("Получение комментария")
-    @Test
-    void getComments() throws Exception {
-        mockMvc.perform(get("/comments"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.count").value(0));
-        addToDb();
-        mockMvc.perform(get("/comments"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.count").value(1))
-                .andExpect(jsonPath("$.results").isArray())
-                .andExpect(jsonPath("$.results.length").value(1));
-
-    }
-
-    @DisplayName("Получение комментария")
+    @DisplayName("Получение комментария зарегестрированного пользователя")
     @Test
     public void getAllComments_Ok() throws Exception {
+
         addToDb();
-        mockMvc.perform(get("/ads/comments/{id}", commentRepo.findById(1).get().getPk())
+        mockMvc.perform(get("/ads/{id}/comments", 1)
                         .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.authorFirstName").value("user1 name"))
-                .andExpect(jsonPath("$.text").value("Test text"));
+                .andExpect(jsonPath("$.count").value(1));
+        commentRepo.deleteAll();
+        mockMvc.perform(get("/ads/{id}/comments", 1)
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.count").value(0));
+    }
 
+    @DisplayName("Получение комментария незарегестрированного пользователя")
+    @Test
+    public void getAllComments_Unauthorized_NotRegistr() throws Exception {
+
+        addToDb();
+        mockMvc.perform(get("/ads/{id}/comments", 1)
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user33@mail.ru", "password1")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @DisplayName("Добавление комментария зрегестрированным пользователем ")
+    @Test
+    public void addComment_Ok() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(post("/ads/{id}/comments", adRepository.findAdByTitle("Title1").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.text").value("Test2Test2Test2"));
+    }
+
+    @DisplayName("Добавление комментария незрегестрированным пользователем")
+    @Test
+    public void addComment_Unauthorized_NotRegistr() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(post("/ads/{id}/comments", adRepository.findAdByTitle("Title1").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user11@mail.ru", "password1")))
+                .andExpect(status().isUnauthorized());
 
     }
-//
-//    @DisplayName("Добавление комментария")
-//    @Test
-//    void addEmployee_test() throws Exception {
-//        List<CommentDTO> commentDTOList = new ArrayList<>();
-//        commentDTOList.add(new CommentDTO(1, 1, "text", "test"));
-//
-//        mockMvc.perform(post("/comments/{id}", commentDTOList.stream().findFirst().get().getPk())
-//
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(commentDTOList))
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isArray())
-//                .andExpect(jsonPath("$.length()").value(1))
-//                .andExpect(jsonPath("$[0].text").value("test"));
-//
-//    }
-//
-//    @DisplayName("Удаление комментария")
-//    @Test
-//    void deleteEmployeeById_thenCheckNotContainEmployee() throws Exception {
-//        UserModel userModel = new UserModel(1, "test", "test", "Testt", "test", "79137027588", Role.USER);
-//        CommentModel commentModel = new CommentModel(1, LocalDateTime.now(), "test");
-////        List<CommentDTO> commentDTOList = new ArrayList<>();
-////        commentDTOList.add(CommentMapper.toCommentDTO(commentModel));
-//        mockMvc.perform(delete("/ads/{adId}/comments/{commentId}", commentModel.getPk()))
-//                .andExpect(status().isOk());
-//
-//    }
 
+    @DisplayName("Добавление комментария, когда не найдено объявление")
+    @Test
+    public void addComment_NotFoundAd() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(post("/ads/{id}/comments", (adRepository.findAdByTitle("Title1").get().getPk()) + 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                .andExpect(status().isNotFound());
+    }
+
+    @DisplayName("Добавление комментария, без аунтентификации пользователя")
+    @Test
+    public void addComment_Unauthorized_NotUser() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(post("/ads/{id}/comments", adRepository.findAdByTitle("Title1").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @DisplayName("Добавление комментария, при неправельном заполнении текста")
+    @Test
+    public void addComment_ShortText() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2");
+
+        mockMvc.perform(post("/ads/{id}/comments", adRepository.findAdByTitle("Title1").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("Удаление комментария владельцем")
+    @Test
+    void deleteComment_Ok() throws Exception {
+        addToDb();
+        mockMvc.perform(delete("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("Удаление комментария администратором")
+    @Test
+    void deleteComment_Ok_Admin() throws Exception {
+        addToDb();
+        mockMvc.perform(delete("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("admin@mail.ru", "password")))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("Удаление комментария другим пользователем")
+    @Test
+    void deleteComment_OtherUser() throws Exception {
+        addToDb();
+        mockMvc.perform(delete("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user2@mail.ru", "password2")))
+                .andExpect(status().isForbidden())
+                .andExpect(content().string("У Вас нет прав на изменение объявления!"));
+    }
+
+    @DisplayName("Удаление комментария незрегестрированным пользователем")
+    @Test
+    void deleteComment_Unauthorized_NotRegistr() throws Exception {
+        addToDb();
+        mockMvc.perform(delete("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user3@mail.ru", "password2")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @DisplayName("Удаление комментария пользователем без аунтентификации")
+    @Test
+    void deleteComment_Unauthorized_NotUsers() throws Exception {
+        addToDb();
+        mockMvc.perform(delete("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @DisplayName("Изменение комментария зарегестрированным пользователем")
+    @Test
+    public void changeComment_ok() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.text").value("Test2Test2Test2"));
+    }
+
+    @DisplayName("Изменение комментария администратором")
+    @Test
+    public void changeComment_Admin() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("admin@mail.ru", "password")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.text").value("Test2Test2Test2"));
+    }
+
+    @DisplayName("Изменение комментария другим пользователем")
+    @Test
+    public void changeComment_OtherUser() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user2@mail.ru", "password2")))
+                .andExpect(status().isForbidden())
+                .andExpect(content().string("У Вас нет прав на изменение объявления!"));
+    }
+
+    @DisplayName("Изменение комментария незарегестрированным пользователем")
+    @Test
+    public void changeComment_Unauthorized_OtherUser_NotRegistr() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user11@mail.ru", "password2")))
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @DisplayName("Изменение комментария пользователем без аунтентификации")
+    @Test
+    public void changeComment_Unauthorized_NotAuthentication() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test2Test2Test2");
+
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString()))
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @DisplayName("Изменение комментария при неправильном заполнении поля")
+    @Test
+    public void changeComment_BadRequast_ShortText() throws Exception {
+
+        addToDb();
+
+        JSONObject comment = new JSONObject();
+        comment.put("text", "Test");
+
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+                        commentRepo.findCommentsByText("TestTestTest").get().getPk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(comment.toString())
+                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                .andExpect(status().isBadRequest());
+
+    }
 
 }
