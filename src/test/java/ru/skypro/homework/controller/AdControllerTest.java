@@ -2,11 +2,13 @@ package ru.skypro.homework.controller;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,21 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.skypro.homework.model.AdModel;
-import ru.skypro.homework.model.ImageModel;
-import ru.skypro.homework.model.Role;
-import ru.skypro.homework.projections.Register;
+import ru.skypro.homework.TestPrepare;
 import ru.skypro.homework.repository.AdRepo;
-import ru.skypro.homework.repository.ImageRepo;
 import ru.skypro.homework.repository.UserRepo;
-import ru.skypro.homework.service.UserServiceSecurity;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,7 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
+@Import(TestPrepare.class)
 class AdControllerTest {
+    @Autowired
+    TestPrepare testPrepare;
 
     @Autowired
     MockMvc mockMvc;
@@ -49,11 +44,6 @@ class AdControllerTest {
     @Autowired
     AdRepo adRepository;
 
-    @Autowired
-    ImageRepo imageRepository;
-
-    @Autowired
-    UserServiceSecurity userServiceSecurity;
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
             .withUsername("postgres")
@@ -65,67 +55,26 @@ class AdControllerTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    private String getAuthenticationHeader(String login, String password) {
-        String encoding = Base64.getEncoder()
-                .encodeToString((login + ":" + password).getBytes(StandardCharsets.UTF_8));
-        return "Basic " + encoding;
-    }
-
-    private void addToDb() throws IOException {
-
-        userServiceSecurity.createUser(new Register(
-                "user1@mail.ru",
-                "password1",
-                "user1 name",
-                "user1 surname",
-                "+711111111",
-                Role.USER));
-
-        userServiceSecurity.createUser(new Register(
-                "user2@mail.ru",
-                "password2",
-                "user2 name",
-                "user2 surname",
-                "+72222222222",
-                Role.USER));
-
-        userServiceSecurity.createUser(new Register(
-                "admin@mail.ru",
-                "password",
-                "admin name",
-                "admin surname",
-                "+72222222",
-                Role.ADMIN));
-
-        ImageModel image = new ImageModel();
-        image.setId(UUID.randomUUID().toString());
-        image.setBytes(Files.readAllBytes(Paths.get("src/test/resources/ad-test.jpg")));
-        imageRepository.save(image);
-
-        AdModel adModel = new AdModel();
-        adModel.setPk(1);
-        adModel.setImage(image);
-        adModel.setPrice(100);
-        adModel.setTitle("Title1");
-        adModel.setDescription("Description1");
-        adModel.setUserModel(userRepository.findByUserName("user1@mail.ru").orElse(null));
-        adRepository.save(adModel);
+    @BeforeEach
+    public void CreateDb() throws IOException {
+        testPrepare.addToDb();
     }
 
     @AfterEach
     public void cleanUserDataBase() {
-        adRepository.deleteAll();
-        userRepository.deleteAll();
+        testPrepare.cleanDataBase();
     }
 
     @DisplayName("Получение всех объявлений")
     @Test
     void shouldGetAllAds_Ok() throws Exception {
+        userRepository.deleteAll();
+
         mockMvc.perform(get("/ads"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.count").value(0));
 
-        addToDb();
+        testPrepare.addToDb();
 
         mockMvc.perform(get("/ads"))
                 .andExpect(status().isOk())
@@ -138,7 +87,6 @@ class AdControllerTest {
     @Test
     void shouldAddNewAd_Ok() throws Exception {
 
-        addToDb();
         adRepository.deleteAll();
 
         JSONObject createOrUpdateAdDTO = new JSONObject();
@@ -154,15 +102,12 @@ class AdControllerTest {
         MockPart properties = new MockPart("properties", json.getBytes());
         properties.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        int id = userRepository.findByUserName("user1@mail.ru").get().getId();
-
         mockMvc.perform(multipart("/ads")
                         .part(mockPart, properties)
-                        .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION, testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.pk").isNumber())
-                .andExpect(jsonPath("$.author").value(id))
+                .andExpect(jsonPath("$.author").value(testPrepare.getUserInByUsername()))
                 .andExpect(jsonPath("$.price").value(500))
                 .andExpect(jsonPath("$.title").value("New ad title"));
     }
@@ -171,7 +116,6 @@ class AdControllerTest {
     @Test
     void shouldNotAddNewAd_BadRequest() throws Exception {
 
-        addToDb();
         adRepository.deleteAll();
 
         JSONObject createOrUpdateAdDTO = new JSONObject();
@@ -187,12 +131,10 @@ class AdControllerTest {
         MockPart properties = new MockPart("properties", json.getBytes());
         properties.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        int id = userRepository.findByUserName("user1@mail.ru").get().getId();
-
         mockMvc.perform(multipart("/ads")
                         .part(mockPart, properties)
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isBadRequest());
     }
 
@@ -200,12 +142,10 @@ class AdControllerTest {
     @Test
     void shouldGetAdsFullInfo_Ok() throws Exception {
 
-        addToDb();
-
         mockMvc.perform(get("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+                        testPrepare.getAdByTitle())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authorFirstName").value("user1 name"))
                 .andExpect(jsonPath("$.price").value(100));
@@ -215,12 +155,10 @@ class AdControllerTest {
     @Test
     void shouldNotGetAds_NotFound() throws Exception {
 
-        addToDb();
-
         mockMvc.perform(get("/ads/{id}",
-                        (adRepository.findAdByTitle("Title1").get().getPk()) + 1)
+                        (testPrepare.getAdByTitle() + 1))
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Not found"));
     }
@@ -229,12 +167,10 @@ class AdControllerTest {
     @Test
     void shouldNotGetAdsFullInfo_Unauthorized() throws Exception {
 
-        addToDb();
-
         mockMvc.perform(get("/ads/{id}",
-                        (adRepository.findAdByTitle("Title1").get().getPk()))
+                        testPrepare.getAdByTitle())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1111")))
+                                testPrepare.getHeader("user1@mail.ru", "password1111")))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -242,19 +178,16 @@ class AdControllerTest {
     @Test
     void shouldUpdateAd_Ok() throws Exception {
 
-        addToDb();
-
         JSONObject createOrUpdateAdDTO = new JSONObject();
         createOrUpdateAdDTO.put("title", "Title1");
         createOrUpdateAdDTO.put("price", "200");
         createOrUpdateAdDTO.put("description", "Description1");
 
-        mockMvc.perform(patch("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+        mockMvc.perform(patch("/ads/{id}", testPrepare.getAdByTitle())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createOrUpdateAdDTO.toString())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(200));
     }
@@ -263,19 +196,16 @@ class AdControllerTest {
     @Test
     void shouldUpdateAdByAdmin_Ok() throws Exception {
 
-        addToDb();
-
         JSONObject createOrUpdateAdDTO = new JSONObject();
         createOrUpdateAdDTO.put("title", "Title1");
         createOrUpdateAdDTO.put("price", "200");
         createOrUpdateAdDTO.put("description", "Description1");
 
-        mockMvc.perform(patch("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+        mockMvc.perform(patch("/ads/{id}", testPrepare.getAdByTitle())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createOrUpdateAdDTO.toString())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("admin@mail.ru", "password")))
+                                testPrepare.getHeader("admin@mail.ru", "password")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(200));
     }
@@ -284,19 +214,16 @@ class AdControllerTest {
     @Test
     void shouldNotUpdateAdByOtherUser_Forbidden() throws Exception {
 
-        addToDb();
-
         JSONObject createOrUpdateAdDTO = new JSONObject();
         createOrUpdateAdDTO.put("title", "Title1");
         createOrUpdateAdDTO.put("price", "200");
         createOrUpdateAdDTO.put("description", "Description1");
 
-        mockMvc.perform(patch("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+        mockMvc.perform(patch("/ads/{id}", testPrepare.getAdByTitle())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createOrUpdateAdDTO.toString())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user2@mail.ru", "password2")))
+                                testPrepare.getHeader("user2@mail.ru", "password2")))
                 .andExpect(status().isForbidden())
                 .andExpect(content().string("У Вас нет прав на изменение объявления!"));
     }
@@ -305,15 +232,12 @@ class AdControllerTest {
     @Test
     void shouldNotUpdateAdByNotUser_Unauthorized() throws Exception {
 
-        addToDb();
-
         JSONObject createOrUpdateAdDTO = new JSONObject();
         createOrUpdateAdDTO.put("title", "Title1");
         createOrUpdateAdDTO.put("price", "200");
         createOrUpdateAdDTO.put("description", "Description1");
 
-        mockMvc.perform(patch("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+        mockMvc.perform(patch("/ads/{id}", testPrepare.getAdByTitle())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createOrUpdateAdDTO.toString()))
                 .andExpect(status().isUnauthorized());
@@ -323,19 +247,16 @@ class AdControllerTest {
     @Test
     void shouldNotUpdateAdByUser_IncorrectInputs() throws Exception {
 
-        addToDb();
-
         JSONObject createOrUpdateAdDTO = new JSONObject();
         createOrUpdateAdDTO.put("title", "Title1");
         createOrUpdateAdDTO.put("price", "20000000");
         createOrUpdateAdDTO.put("description", "Description1");
 
-        mockMvc.perform(patch("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+        mockMvc.perform(patch("/ads/{id}", testPrepare.getAdByTitle())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createOrUpdateAdDTO.toString())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isBadRequest());
     }
 
@@ -343,12 +264,9 @@ class AdControllerTest {
     @Test
     void shouldRemoveAd_Ok() throws Exception {
 
-        addToDb();
-
-        mockMvc.perform(delete("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+        mockMvc.perform(delete("/ads/{id}", testPrepare.getAdByTitle())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk());
     }
 
@@ -356,12 +274,9 @@ class AdControllerTest {
     @Test
     void shouldRemoveAdByAdmin_Ok() throws Exception {
 
-        addToDb();
-
-        mockMvc.perform(delete("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+        mockMvc.perform(delete("/ads/{id}", testPrepare.getAdByTitle())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("admin@mail.ru", "password")))
                 .andExpect(status().isOk());
     }
 
@@ -369,12 +284,9 @@ class AdControllerTest {
     @Test
     void shouldNotRemoveAdByOtherUser_Forbidden() throws Exception {
 
-        addToDb();
-
-        mockMvc.perform(delete("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk())
+        mockMvc.perform(delete("/ads/{id}", testPrepare.getAdByTitle())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user2@mail.ru", "password2")))
+                                testPrepare.getHeader("user2@mail.ru", "password2")))
                 .andExpect(status().isForbidden())
                 .andExpect(content().string("У Вас нет прав на изменение объявления!"));
     }
@@ -383,10 +295,7 @@ class AdControllerTest {
     @Test
     void shouldNotRemoveAdByNotUser_Unauthorized() throws Exception {
 
-        addToDb();
-
-        mockMvc.perform(delete("/ads/{id}",
-                        adRepository.findAdByTitle("Title1").get().getPk()))
+        mockMvc.perform(delete("/ads/{id}", testPrepare.getAdByTitle()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -394,12 +303,9 @@ class AdControllerTest {
     @Test
     void shouldNotRemoveAdBytUser_NotFound() throws Exception {
 
-        addToDb();
-
-        mockMvc.perform(delete("/ads/{id}",
-                        (adRepository.findAdByTitle("Title1").get().getPk()) + 1)
+        mockMvc.perform(delete("/ads/{id}", (testPrepare.getAdByTitle() + 1))
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isNotFound());
     }
 
@@ -407,17 +313,15 @@ class AdControllerTest {
     @Test
     void shouldGetAdsMe_Ok() throws Exception {
 
-        addToDb();
-
         mockMvc.perform(get("/ads/me")
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                testPrepare.getHeader("user1@mail.ru", "password1")))
                 .andExpect(jsonPath("$.results").isArray())
                 .andExpect(jsonPath("$.results.length()").value(1));
 
         mockMvc.perform(get("/ads/me")
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user2@mail.ru", "password2")))
+                                testPrepare.getHeader("user2@mail.ru", "password2")))
                 .andExpect(jsonPath("$.results").isArray())
                 .andExpect(jsonPath("$.results.length()").value(0));
     }
@@ -426,11 +330,9 @@ class AdControllerTest {
     @Test
     void shouldNotGetAdsMe_isUnauthorized() throws Exception {
 
-        addToDb();
-
         mockMvc.perform(get("/ads/me")
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user3@mail.ru", "password1")))
+                                testPrepare.getHeader("user3@mail.ru", "password1")))
                 .andExpect(status().isUnauthorized());
     }
 }

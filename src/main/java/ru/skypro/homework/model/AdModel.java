@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 /**
- * Класс сущности объвления
+ * Класс сущности объявления
  */
 @Entity
 @Data
@@ -19,7 +19,7 @@ public class AdModel {
     @Column(name = "ad_id")
     private int pk;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "image_id")
     private ImageModel image;
 

@@ -2,24 +2,23 @@ package ru.skypro.homework.controller;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.skypro.homework.TestPrepare;
 import ru.skypro.homework.model.Role;
-import ru.skypro.homework.projections.Register;
-import ru.skypro.homework.repository.UserRepo;
-import ru.skypro.homework.service.UserServiceSecurity;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.io.IOException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -29,16 +28,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
+@Import(TestPrepare.class)
 class AuthControllerTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @Autowired
-    private UserRepo userRepository;
+    TestPrepare testPrepare;
 
-    @Autowired
-    UserServiceSecurity userServiceSecurity;
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
             .withUsername("postgres")
@@ -50,44 +48,22 @@ class AuthControllerTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    private String getAuthenticationHeader(String login, String password) {
-        String encoding = Base64.getEncoder()
-                .encodeToString((login + ":" + password).getBytes(StandardCharsets.UTF_8));
-        return "Basic " + encoding;
-    }
-
-    private void addToDb() {
-
-        userServiceSecurity.createUser(new Register(
-                "user@mail.ru",
-                "password",
-                "user name",
-                "user surname",
-                "+711111111",
-                Role.USER));
-
-        userServiceSecurity.createUser(new Register(
-                "admin@mail.ru",
-                "password",
-                "admin name",
-                "admin surname",
-                "+72222222",
-                Role.ADMIN));
+    @BeforeEach
+    public void CreateDb() throws IOException {
+        testPrepare.addToDb();
     }
 
     @AfterEach
     public void cleanUserDataBase() {
-        userRepository.deleteAll();
+        testPrepare.cleanDataBase();
     }
-
 
     @DisplayName("Пользователь аутентифицировался")
     @Test
     void shouldBeLogin_Ok() throws Exception {
-        addToDb();
         JSONObject login = new JSONObject();
-        login.put("username", "user@mail.ru");
-        login.put("password", "password");
+        login.put("username", "user1@mail.ru");
+        login.put("password", "password1");
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(login.toString()))
@@ -97,10 +73,9 @@ class AuthControllerTest {
     @DisplayName("Ошибка аутентификации - не верный пароль")
     @Test
     void shouldBeNotLogin_Unauthorized() throws Exception {
-        addToDb();
         JSONObject login = new JSONObject();
-        login.put("username", "user@mail.ru");
-        login.put("password", "password1");
+        login.put("username", "user1@mail.ru");
+        login.put("password", "password9");
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(login.toString()))
@@ -110,9 +85,8 @@ class AuthControllerTest {
     @DisplayName("Ошибка аутентификации - не верный логин")
     @Test
     void shouldBeNotLogin_NotFound() throws Exception {
-        addToDb();
         JSONObject login = new JSONObject();
-        login.put("username", "user2@mail.ru");
+        login.put("username", "user4@mail.ru");
         login.put("password", "password");
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +97,6 @@ class AuthControllerTest {
     @DisplayName("Ошибка аутентификации - короткий логин")
     @Test
     void shouldBeNotLogin_Bad() throws Exception {
-        addToDb();
         JSONObject login = new JSONObject();
         login.put("username", "us");
         login.put("password", "password");
@@ -136,6 +109,7 @@ class AuthControllerTest {
     @DisplayName("Регистрация пользователя")
     @Test
     void shouldBeRegistered_Ok() throws Exception {
+        testPrepare.cleanDataBase();
         JSONObject register = new JSONObject();
         register.put("username", "user@mail.ru");
         register.put("password", "password");
@@ -152,10 +126,9 @@ class AuthControllerTest {
     @DisplayName("Имя занято")
     @Test
     void shouldBeNotRegistered_BadRequest() throws Exception {
-        addToDb();
         JSONObject register = new JSONObject();
-        register.put("username", "user@mail.ru");
-        register.put("password", "password");
+        register.put("username", "user1@mail.ru");
+        register.put("password", "password1");
         register.put("firstName", "user name");
         register.put("lastName", "user surname");
         register.put("phone", "+71111111111");
