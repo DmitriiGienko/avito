@@ -361,7 +361,7 @@ class AdControllerTest {
         mockMvc.perform(delete("/ads/{id}",
                         adRepository.findAdByTitle("Title1").get().getPk())
                         .header(HttpHeaders.AUTHORIZATION,
-                                getAuthenticationHeader("user1@mail.ru", "password1")))
+                                getAuthenticationHeader("admin@mail.ru", "password")))
                 .andExpect(status().isOk());
     }
 
