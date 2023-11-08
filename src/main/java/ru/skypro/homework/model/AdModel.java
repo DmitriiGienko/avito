@@ -19,7 +19,7 @@ public class AdModel {
     @Column(name = "ad_id")
     private int pk;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "image_id")
     private ImageModel image;
 
