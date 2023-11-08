@@ -84,7 +84,6 @@ class UserControllerTest {
 
     @DisplayName("Получение профиля пользователя")
     @Test
-//    @WithMockUser(roles = "USER")
     public void shouldGetUserInfo_Ok() throws Exception {
         addToDb();
         mockMvc.perform(get("/users/me")
@@ -96,7 +95,6 @@ class UserControllerTest {
 
     @DisplayName("ошибка авторизации пользователя")
     @Test
-//    @WithMockUser(roles = "USER")
     public void shouldNotGetUserInfo_Unauthorized() throws Exception {
         addToDb();
         mockMvc.perform(get("/users/me")
