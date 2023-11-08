@@ -5,10 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.exceptions.AccessErrorException;
+import ru.skypro.homework.exceptions.AdNotFoundException;
 import ru.skypro.homework.exceptions.CommentNotFoundException;
 import ru.skypro.homework.exceptions.UserNotFoundException;
+import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.model.AdModel;
 import ru.skypro.homework.model.CommentModel;
@@ -69,7 +72,7 @@ public class CommentsServiceImpl implements CommentsService {
     public CommentDTO addComment(int id, CreateOrUpdateComment createOrUpdateComment) {
 
         UserModel user = userService.findUser().orElseThrow(UserNotFoundException::new);
-        AdModel adModel = adRepo.findById(id).orElseThrow();
+        AdModel adModel = adRepo.findById(id).orElseThrow(AdNotFoundException::new);
 
         CommentModel commentModel = new CommentModel();
         commentModel.setAdModel(adModel);
