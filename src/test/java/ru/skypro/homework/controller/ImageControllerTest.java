@@ -31,7 +31,6 @@ import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -146,7 +145,8 @@ class ImageControllerTest {
         addToDb();
         int id = adRepository.findAdByTitle("Title1").get().getPk();
         ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
-        MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
+        MockPart mockPart = new MockPart("image", "image-test.jpg",
+                classPathResource.getInputStream().readAllBytes());
         mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
         mockMvc.perform(multipart("/ads/{id}/image", id)
                         .part(mockPart)
@@ -166,7 +166,8 @@ class ImageControllerTest {
         addToDb();
         int id = adRepository.findAdByTitle("Title1").get().getPk();
         ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
-        MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
+        MockPart mockPart = new MockPart("image", "image-test.jpg",
+                classPathResource.getInputStream().readAllBytes());
         mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
         mockMvc.perform(multipart("/ads/{id}/image", id)
                         .part(mockPart)
@@ -187,7 +188,8 @@ class ImageControllerTest {
         addToDb();
         int id = adRepository.findAdByTitle("Title1").get().getPk();
         ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
-        MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
+        MockPart mockPart = new MockPart("image", "image-test.jpg",
+                classPathResource.getInputStream().readAllBytes());
         mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
         mockMvc.perform(multipart("/ads/{id}/image", id)
                         .part(mockPart)
@@ -205,7 +207,8 @@ class ImageControllerTest {
         addToDb();
         int id = adRepository.findAdByTitle("Title1").get().getPk() + 1;
         ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
-        MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
+        MockPart mockPart = new MockPart("image", "image-test.jpg",
+                classPathResource.getInputStream().readAllBytes());
         mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
         mockMvc.perform(multipart("/ads/{id}/image", id)
                         .part(mockPart)
@@ -225,7 +228,8 @@ class ImageControllerTest {
     void shouldUpdateUserImage_Ok() throws Exception {
         addToDb();
         ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
-        MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
+        MockPart mockPart = new MockPart("image", "image-test.jpg",
+                classPathResource.getInputStream().readAllBytes());
         mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
         mockMvc.perform(multipart("/users/me/image")
                         .part(mockPart)
@@ -244,7 +248,8 @@ class ImageControllerTest {
     void shouldNotUpdateUserImage_Unauthorized() throws Exception {
         addToDb();
         ClassPathResource classPathResource = new ClassPathResource("image-test.jpg");
-        MockPart mockPart = new MockPart("image", "image-test.jpg", classPathResource.getInputStream().readAllBytes());
+        MockPart mockPart = new MockPart("image", "image-test.jpg",
+                classPathResource.getInputStream().readAllBytes());
         mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
         mockMvc.perform(multipart("/users/me/image")
                         .part(mockPart)

@@ -30,7 +30,6 @@ public class CommentModel {
     @JoinColumn(name = "user_id")
     private UserModel userModel;
 
-    // появляется поле ad_id в таблице comments
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_id")
     private AdModel adModel;

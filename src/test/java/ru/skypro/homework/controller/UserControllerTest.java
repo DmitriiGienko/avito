@@ -64,7 +64,7 @@ class UserControllerTest {
                 "password",
                 "user name",
                 "user surname",
-                "+711111111",
+                "+71111111111",
                 Role.USER));
 
         userServiceSecurity.createUser(new Register(
@@ -72,7 +72,7 @@ class UserControllerTest {
                 "password",
                 "admin name",
                 "admin surname",
-                "+72222222",
+                "+72222222222",
                 Role.ADMIN));
     }
 
@@ -217,6 +217,5 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
 
     }
-
 
 }

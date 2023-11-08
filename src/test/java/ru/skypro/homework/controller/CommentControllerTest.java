@@ -1,6 +1,5 @@
 package ru.skypro.homework.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,18 +9,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.skypro.homework.HomeworkApplication;
-import ru.skypro.homework.dto.CommentDTO;
-import ru.skypro.homework.mapper.CommentMapper;
-import ru.skypro.homework.model.*;
-import ru.skypro.homework.projections.Comments;
+import ru.skypro.homework.model.AdModel;
+import ru.skypro.homework.model.CommentModel;
+import ru.skypro.homework.model.ImageModel;
+import ru.skypro.homework.model.Role;
 import ru.skypro.homework.projections.Register;
 import ru.skypro.homework.repository.AdRepo;
 import ru.skypro.homework.repository.CommentRepo;
@@ -29,15 +25,12 @@ import ru.skypro.homework.repository.ImageRepo;
 import ru.skypro.homework.repository.UserRepo;
 import ru.skypro.homework.service.UserServiceSecurity;
 
-import javax.xml.stream.events.Comment;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -103,7 +96,7 @@ public class CommentControllerTest {
                 "password",
                 "admin name",
                 "admin surname",
-                "+72222222",
+                "+73333333333",
                 Role.ADMIN));
 
         ImageModel image = new ImageModel();
@@ -136,33 +129,36 @@ public class CommentControllerTest {
         commentRepo.deleteAll();
     }
 
-    @DisplayName("Получение комментария зарегестрированного пользователя")
+    @DisplayName("Получение комментария зарегистрированного пользователя")
     @Test
     public void getAllComments_Ok() throws Exception {
 
         addToDb();
         mockMvc.perform(get("/ads/{id}/comments", 1)
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.count").value(1));
         commentRepo.deleteAll();
         mockMvc.perform(get("/ads/{id}/comments", 1)
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.count").value(0));
     }
 
-    @DisplayName("Получение комментария незарегестрированного пользователя")
+    @DisplayName("Получение комментария незарегистрированного пользователя")
     @Test
     public void getAllComments_Unauthorized_NotRegistr() throws Exception {
 
         addToDb();
         mockMvc.perform(get("/ads/{id}/comments", 1)
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user33@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user33@mail.ru", "password1")))
                 .andExpect(status().isUnauthorized());
     }
 
-    @DisplayName("Добавление комментария зрегестрированным пользователем ")
+    @DisplayName("Добавление комментария зарегистрированным пользователем ")
     @Test
     public void addComment_Ok() throws Exception {
 
@@ -174,12 +170,13 @@ public class CommentControllerTest {
         mockMvc.perform(post("/ads/{id}/comments", adRepository.findAdByTitle("Title1").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.text").value("Test2Test2Test2"));
     }
 
-    @DisplayName("Добавление комментария незрегестрированным пользователем")
+    @DisplayName("Добавление комментария незарегистрированным пользователем")
     @Test
     public void addComment_Unauthorized_NotRegistr() throws Exception {
 
@@ -191,7 +188,8 @@ public class CommentControllerTest {
         mockMvc.perform(post("/ads/{id}/comments", adRepository.findAdByTitle("Title1").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user11@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user11@mail.ru", "password1")))
                 .andExpect(status().isUnauthorized());
 
     }
@@ -205,14 +203,16 @@ public class CommentControllerTest {
         JSONObject comment = new JSONObject();
         comment.put("text", "Test2Test2Test2");
 
-        mockMvc.perform(post("/ads/{id}/comments", (adRepository.findAdByTitle("Title1").get().getPk()) + 1)
+        mockMvc.perform(post("/ads/{id}/comments",
+                        (adRepository.findAdByTitle("Title1").get().getPk()) + 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isNotFound());
     }
 
-    @DisplayName("Добавление комментария, без аунтентификации пользователя")
+    @DisplayName("Добавление комментария, без аутентификации пользователя")
     @Test
     public void addComment_Unauthorized_NotUser() throws Exception {
 
@@ -227,7 +227,7 @@ public class CommentControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @DisplayName("Добавление комментария, при неправельном заполнении текста")
+    @DisplayName("Добавление комментария, при неправильном заполнении текста")
     @Test
     public void addComment_ShortText() throws Exception {
 
@@ -239,7 +239,8 @@ public class CommentControllerTest {
         mockMvc.perform(post("/ads/{id}/comments", adRepository.findAdByTitle("Title1").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isBadRequest());
     }
 
@@ -280,7 +281,7 @@ public class CommentControllerTest {
                 .andExpect(content().string("У Вас нет прав на изменение объявления!"));
     }
 
-    @DisplayName("Удаление комментария незрегестрированным пользователем")
+    @DisplayName("Удаление комментария незарегистрированным пользователем")
     @Test
     void deleteComment_Unauthorized_NotRegistr() throws Exception {
         addToDb();
@@ -292,7 +293,7 @@ public class CommentControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @DisplayName("Удаление комментария пользователем без аунтентификации")
+    @DisplayName("Удаление комментария пользователем без аутентификации")
     @Test
     void deleteComment_Unauthorized_NotUsers() throws Exception {
         addToDb();
@@ -302,7 +303,7 @@ public class CommentControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @DisplayName("Изменение комментария зарегестрированным пользователем")
+    @DisplayName("Изменение комментария зарегистрированным пользователем")
     @Test
     public void changeComment_ok() throws Exception {
 
@@ -311,11 +312,13 @@ public class CommentControllerTest {
         JSONObject comment = new JSONObject();
         comment.put("text", "Test2Test2Test2");
 
-        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
                         commentRepo.findCommentsByText("TestTestTest").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.text").value("Test2Test2Test2"));
     }
@@ -329,11 +332,13 @@ public class CommentControllerTest {
         JSONObject comment = new JSONObject();
         comment.put("text", "Test2Test2Test2");
 
-        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
                         commentRepo.findCommentsByText("TestTestTest").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("admin@mail.ru", "password")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("admin@mail.ru", "password")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.text").value("Test2Test2Test2"));
     }
@@ -347,16 +352,18 @@ public class CommentControllerTest {
         JSONObject comment = new JSONObject();
         comment.put("text", "Test2Test2Test2");
 
-        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
                         commentRepo.findCommentsByText("TestTestTest").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user2@mail.ru", "password2")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user2@mail.ru", "password2")))
                 .andExpect(status().isForbidden())
                 .andExpect(content().string("У Вас нет прав на изменение объявления!"));
     }
 
-    @DisplayName("Изменение комментария незарегестрированным пользователем")
+    @DisplayName("Изменение комментария незарегистрированным пользователем")
     @Test
     public void changeComment_Unauthorized_OtherUser_NotRegistr() throws Exception {
 
@@ -365,16 +372,17 @@ public class CommentControllerTest {
         JSONObject comment = new JSONObject();
         comment.put("text", "Test2Test2Test2");
 
-        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
                         commentRepo.findCommentsByText("TestTestTest").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user11@mail.ru", "password2")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user11@mail.ru", "password2")))
                 .andExpect(status().isUnauthorized());
-
     }
 
-    @DisplayName("Изменение комментария пользователем без аунтентификации")
+    @DisplayName("Изменение комментария пользователем без аутентификации")
     @Test
     public void changeComment_Unauthorized_NotAuthentication() throws Exception {
 
@@ -383,30 +391,31 @@ public class CommentControllerTest {
         JSONObject comment = new JSONObject();
         comment.put("text", "Test2Test2Test2");
 
-        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
                         commentRepo.findCommentsByText("TestTestTest").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString()))
                 .andExpect(status().isUnauthorized());
-
     }
 
     @DisplayName("Изменение комментария при неправильном заполнении поля")
     @Test
-    public void changeComment_BadRequast_ShortText() throws Exception {
+    public void changeComment_BadRequest_ShortText() throws Exception {
 
         addToDb();
 
         JSONObject comment = new JSONObject();
         comment.put("text", "Test");
 
-        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}", adRepository.findAdByTitle("Title1").get().getPk(),
+        mockMvc.perform(patch("/ads/{adId}/comments/{commentId}",
+                        adRepository.findAdByTitle("Title1").get().getPk(),
                         commentRepo.findCommentsByText("TestTestTest").get().getPk())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(comment.toString())
-                        .header(HttpHeaders.AUTHORIZATION, getAuthenticationHeader("user1@mail.ru", "password1")))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                getAuthenticationHeader("user1@mail.ru", "password1")))
                 .andExpect(status().isBadRequest());
-
     }
 
 }

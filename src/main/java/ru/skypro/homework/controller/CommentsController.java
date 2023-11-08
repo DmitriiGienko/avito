@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDTO;
-import ru.skypro.homework.projections.Ads;
 import ru.skypro.homework.projections.Comments;
 import ru.skypro.homework.projections.CreateOrUpdateComment;
 import ru.skypro.homework.service.CommentsService;

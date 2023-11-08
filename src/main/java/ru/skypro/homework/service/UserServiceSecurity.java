@@ -18,7 +18,7 @@ public class UserServiceSecurity implements UserDetailsService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     /**
-     * Метод получения данных пользоавтеля для аунтентификации
+     * Метод получения данных пользователя для аутентификации
      */
     @Override
     public UserDetails loadUserByUsername(String username) {

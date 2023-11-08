@@ -63,7 +63,7 @@ class AuthControllerTest {
                 "password",
                 "user name",
                 "user surname",
-                "+711111111",
+                "+71111111111",
                 Role.USER));
 
         userServiceSecurity.createUser(new Register(
@@ -71,7 +71,7 @@ class AuthControllerTest {
                 "password",
                 "admin name",
                 "admin surname",
-                "+72222222",
+                "+73333333333",
                 Role.ADMIN));
     }
 
