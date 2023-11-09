@@ -145,3 +145,258 @@
 18:56:49.693 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий изменен пользователем user1@mail.ru
 18:56:50.332 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user2@mail.ru
 18:56:50.332 [main] ERROR r.s.h.e.AccessExceptionHandler - Нет прав на изменение объявления
+19:13:34.060 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для admin@mail.ru
+19:13:34.060 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий удален пользователем admin@mail.ru
+19:13:34.591 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+19:13:34.595 [main] ERROR r.s.h.exceptions.AdExceptionHandler - Объявление не найдено
+19:13:35.344 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user2@mail.ru
+19:13:35.345 [main] ERROR r.s.h.e.AccessExceptionHandler - Нет прав на изменение объявления
+19:13:35.614 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user1@mail.ru
+19:13:35.615 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий удален пользователем user1@mail.ru
+19:13:36.348 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для admin@mail.ru
+19:13:36.348 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий изменен пользователем admin@mail.ru
+19:13:36.852 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+19:13:36.856 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий к объявлению Title1 создан
+19:13:37.120 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:13:37.187 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:13:37.455 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user1@mail.ru
+19:13:37.455 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий изменен пользователем user1@mail.ru
+19:13:38.118 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user2@mail.ru
+19:13:38.119 [main] ERROR r.s.h.e.AccessExceptionHandler - Нет прав на изменение объявления
+19:13:50.194 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:19:57.387 [main] INFO  r.s.h.service.impl.AdServiceImpl - Проверка аутентификации admin@mail.ru - Ок
+19:19:57.390 [main] INFO  r.s.h.service.impl.AdServiceImpl - Изменение объявления Title1
+19:19:57.914 [main] INFO  r.s.h.service.impl.AdServiceImpl - Проверка аутентификации user2@mail.ru - Ок
+19:19:57.915 [main] ERROR r.s.h.e.AccessExceptionHandler - Нет прав на изменение объявления
+19:19:58.189 [main] ERROR r.s.h.exceptions.AdExceptionHandler - Объявление не найдено
+19:19:58.453 [main] INFO  r.s.h.service.impl.AdServiceImpl - Проверка аутентификации user1@mail.ru - Ок
+19:19:58.454 [main] INFO  r.s.h.service.impl.AdServiceImpl - Изменение объявления Title1
+19:19:58.923 [main] INFO  r.s.h.service.impl.AdServiceImpl - Проверка аутентификации user1@mail.ru - Ок
+19:19:58.923 [main] INFO  r.s.h.service.impl.AdServiceImpl - Объявление Title1 удалено
+19:19:59.186 [main] INFO  r.s.h.service.impl.AdServiceImpl - Проверка аутентификации user2@mail.ru - Ок
+19:19:59.187 [main] ERROR r.s.h.e.AccessExceptionHandler - Нет прав на изменение объявления
+19:19:59.724 [main] INFO  r.s.h.service.impl.AdServiceImpl - Добавлена картинка к объявлению New ad title
+19:19:59.725 [main] INFO  r.s.h.service.impl.AdServiceImpl - user1@mail.ru добавил объявление
+19:19:59.738 [main] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:19:59.936 [main] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:20:00.941 [main] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:20:01.011 [main] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:20:01.273 [main] INFO  r.s.h.service.impl.AdServiceImpl - Проверка аутентификации user1@mail.ru - Ок
+19:20:01.273 [main] INFO  r.s.h.service.impl.AdServiceImpl - Объявление Title1 удалено
+19:20:01.536 [main] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению Title1
+19:20:01.805 [main] ERROR r.s.h.exceptions.AdExceptionHandler - Объявление не найдено
+19:20:44.877 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user@mail.ru авторизован
+19:20:44.940 [main] ERROR r.s.h.e.UserExceptionHandler - Доступ запрещен!
+19:20:45.166 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user@mail.ru авторизован
+19:20:45.292 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пароль пользователя user@mail.ru изменен
+19:20:45.487 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user@mail.ru авторизован
+19:20:45.912 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user@mail.ru авторизован
+19:20:45.914 [main] INFO  r.s.h.service.impl.UserServiceImpl - Данные пользователя user@mail.ru изменены
+19:20:46.634 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user2@mail.ru авторизован
+19:20:46.634 [main] ERROR r.s.h.e.UserExceptionHandler - Пользователь не найден
+19:21:08.882 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для admin@mail.ru
+19:21:08.882 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий удален пользователем admin@mail.ru
+19:21:09.421 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+19:21:09.425 [main] ERROR r.s.h.exceptions.AdExceptionHandler - Объявление не найдено
+19:21:10.174 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user2@mail.ru
+19:21:10.175 [main] ERROR r.s.h.e.AccessExceptionHandler - Нет прав на изменение объявления
+19:21:10.450 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user1@mail.ru
+19:21:10.450 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий удален пользователем user1@mail.ru
+19:21:11.198 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для admin@mail.ru
+19:21:11.198 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий изменен пользователем admin@mail.ru
+19:21:11.698 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+19:21:11.702 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий к объявлению Title1 создан
+19:21:11.968 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:21:12.039 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:21:12.310 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user1@mail.ru
+19:21:12.310 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий изменен пользователем user1@mail.ru
+19:21:12.977 [main] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для user2@mail.ru
+19:21:12.977 [main] ERROR r.s.h.e.AccessExceptionHandler - Нет прав на изменение объявления
+19:22:45.981 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 1111@1111 зарегистрирован
+19:22:47.530 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 1111@1111 авторизирован
+19:22:47.746 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:22:47.748 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:22:47.757 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:22:55.628 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Аватарка пользователя 1111@1111 изменена
+19:22:55.701 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:22:56.217 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:22:56.220 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:22:56.220 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:22:56.342 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:22:56.414 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:02.042 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:23:02.048 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.UserServiceImpl - Данные пользователя 1111@1111 изменены
+19:23:18.583 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:18.596 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.AdServiceImpl - Добавлена картинка к объявлению уууууууу
+19:23:18.601 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.AdServiceImpl - 1111@1111 добавил объявление
+19:23:18.655 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:19.212 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:23:19.214 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:19.215 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:23:19.218 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:23:19.285 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:19.742 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:21.493 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению уууууууу
+19:23:21.493 [http-nio-8080-exec-3] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:23:22.216 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:44.710 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:23:44.720 [http-nio-8080-exec-8] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий к объявлению уууууууу создан
+19:23:44.731 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:47.439 [http-nio-8080-exec-4] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для 1111@1111
+19:23:47.439 [http-nio-8080-exec-4] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий удален пользователем 1111@1111
+19:23:51.784 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:23:51.789 [http-nio-8080-exec-5] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий к объявлению уууууууу создан
+19:23:51.796 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:57.333 [http-nio-8080-exec-10] INFO  r.s.h.s.impl.CommentsServiceImpl - Доступ к работе с комментариями разрешен для 1111@1111
+19:23:57.334 [http-nio-8080-exec-10] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий изменен пользователем 1111@1111
+19:23:59.451 [http-nio-8080-exec-3] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:23:59.452 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:23:59.452 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению уууууууу
+19:23:59.455 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:23:59.464 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:23:59.978 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:23:59.988 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:04.619 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:04.687 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:04.758 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:06.108 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению уууууууу
+19:24:06.108 [http-nio-8080-exec-3] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:24:06.841 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:08.460 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Проверка аутентификации 1111@1111 - Ок
+19:24:08.460 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Объявление уууууууу удалено
+19:24:10.150 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:10.220 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:23.127 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:23.131 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - Добавлена картинка к объявлению wwwwwwrrr
+19:24:23.141 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - 1111@1111 добавил объявление
+19:24:23.196 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:23.711 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:24:23.713 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:23.715 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:24:23.716 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:24:23.784 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:24.230 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:26.732 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:24:26.803 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:24:27.328 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:41.140 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 2222@2222 зарегистрирован
+19:24:42.269 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 2222@2222 авторизирован
+19:24:42.410 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 2222@2222 авторизован
+19:24:42.412 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:24:42.413 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:24:42.935 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:44.882 [http-nio-8080-exec-10] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:24:44.883 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению wwwwwwrrr
+19:24:45.631 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:24:54.359 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AdServiceImpl - Проверка аутентификации 2222@2222 - Ок
+19:24:54.360 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AdServiceImpl - Изменение объявления tttttttt
+19:25:05.810 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 2222@2222 авторизован
+19:25:05.813 [http-nio-8080-exec-5] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий к объявлению tttttttt создан
+19:25:23.692 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 2222@2222 авторизован
+19:25:23.815 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.UserServiceImpl - Пароль пользователя 2222@2222 изменен
+19:25:23.846 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:25:23.924 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:25:24.438 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:25:31.583 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 2222@2222 авторизирован
+19:25:31.721 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 2222@2222 авторизован
+19:25:31.726 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:25:31.727 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:25:32.255 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:37:35.648 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:37:35.733 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:37:36.257 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:37:40.524 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 2222@2222 авторизирован
+19:37:40.585 [http-nio-8080-exec-8] ERROR r.s.h.service.impl.AuthServiceImpl - Ошибка аутентификации - 2222@2222
+19:37:59.354 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 2222@2222 авторизирован
+19:37:59.502 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 2222@2222 авторизован
+19:37:59.507 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:37:59.508 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:38:00.026 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:01.206 [http-nio-8080-exec-2] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:38:01.206 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению tttttttt
+19:38:01.927 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:10.723 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:10.819 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:11.333 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:14.688 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 1111@1111 авторизирован
+19:38:14.821 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:38:14.824 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:14.824 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:38:15.347 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:16.349 [http-nio-8080-exec-2] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:38:16.353 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению tttttttt
+19:38:17.083 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:20.536 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:20.606 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:20.675 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:38.699 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:38.701 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - Добавлена картинка к объявлению Usereeee
+19:38:38.704 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AdServiceImpl - 1111@1111 добавил объявление
+19:38:38.769 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:39.211 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:39.300 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:38:39.301 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:39.304 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:38:39.313 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:39.371 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:39.827 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:39.833 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:40.875 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:40.938 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:41.450 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:41.450 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:50.762 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 2222@2222 авторизирован
+19:38:50.902 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 2222@2222 авторизован
+19:38:50.902 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:38:50.904 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:51.426 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:51.426 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:52.752 [http-nio-8080-exec-3] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:38:52.752 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению Usereeee
+19:38:53.483 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:58.856 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:58.928 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:38:59.446 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:38:59.447 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:03.087 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 1111@1111 авторизирован
+19:39:03.224 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:39:03.224 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:39:03.228 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:39:03.755 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:03.755 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:04.781 [http-nio-8080-exec-4] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:39:04.782 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению tttttttt
+19:39:05.505 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:11.374 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:39:11.378 [http-nio-8080-exec-10] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий к объявлению tttttttt создан
+19:39:11.386 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:14.792 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:14.792 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:14.860 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:14.929 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:18.881 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению Usereeee
+19:39:18.882 [http-nio-8080-exec-8] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:39:19.612 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:23.982 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 1111@1111 авторизован
+19:39:23.985 [http-nio-8080-exec-5] INFO  r.s.h.s.impl.CommentsServiceImpl - Комментарий к объявлению Usereeee создан
+19:39:23.992 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:27.297 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:27.297 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:27.366 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:27.435 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:28.206 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:39:28.280 [http-nio-8080-exec-4] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:39:28.800 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:28.800 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:33.003 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 2222@2222 авторизирован
+19:39:33.065 [http-nio-8080-exec-5] ERROR r.s.h.service.impl.AuthServiceImpl - Ошибка аутентификации - 2222@2222
+19:39:36.969 [http-nio-8080-exec-10] INFO  r.s.h.service.impl.AuthServiceImpl - Пользователь 2222@2222 авторизирован
+19:39:37.111 [http-nio-8080-exec-7] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь 2222@2222 авторизован
+19:39:37.114 [http-nio-8080-exec-1] INFO  r.s.h.service.impl.AdServiceImpl - Получение объявлений авторизированного пользователя
+19:39:37.114 [http-nio-8080-exec-9] INFO  r.s.h.service.impl.AdServiceImpl - Все объявления получены
+19:39:37.639 [http-nio-8080-exec-2] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:37.640 [http-nio-8080-exec-3] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:40.097 [http-nio-8080-exec-6] INFO  r.s.h.service.impl.AdServiceImpl - Получение полной информации по объявлению tttttttt
+19:39:40.098 [http-nio-8080-exec-4] INFO  r.s.h.s.impl.CommentsServiceImpl - Все комментарии получены
+19:39:40.812 [http-nio-8080-exec-8] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
+19:39:40.813 [http-nio-8080-exec-5] INFO  r.s.h.service.impl.ImageServiceImpl - Картинка найдена в репозитории
