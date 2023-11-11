@@ -164,6 +164,52 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.firstName").value("newName"))
                 .andExpect(jsonPath("$.lastName").value("newSurname"))
                 .andExpect(jsonPath("$.phone").value("+72222222222"));
+
+
+        JSONObject updateUser2 = new JSONObject();
+        updateUser.put("firstName", "newName1");
+        updateUser.put("lastName", "newSurname");
+        updateUser.put("phone", "+72222222222");
+
+        mockMvc.perform(patch("/users/me")
+                        .header(HttpHeaders.AUTHORIZATION,
+                                testPrepare.getHeader("user1@mail.ru", "password1"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateUser2.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("newName1"))
+                .andExpect(jsonPath("$.lastName").value("newSurname"))
+                .andExpect(jsonPath("$.phone").value("+72222222222"));
+//
+//        JSONObject updateUser3 = new JSONObject();
+//        updateUser.put("firstName", "newName");
+//        updateUser.put("lastName", "newSurname3");
+//        updateUser.put("phone", "+722222222223");
+//
+//        mockMvc.perform(patch("/users/me")
+//                        .header(HttpHeaders.AUTHORIZATION,
+//                                testPrepare.getHeader("user1@mail.ru", "password1"))
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(updateUser3.toString()))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.firstName").value("newName1"))
+//                .andExpect(jsonPath("$.lastName").value("newSurname3"))
+//                .andExpect(jsonPath("$.phone").value("+722222222223"));
+//
+//        JSONObject updateUser4 = new JSONObject();
+//        updateUser.put("firstName", "newName");
+//        updateUser.put("lastName", "newSurname");
+//        updateUser.put("phone", "+722222222223");
+//
+//        mockMvc.perform(patch("/users/me")
+//                        .header(HttpHeaders.AUTHORIZATION,
+//                                testPrepare.getHeader("user1@mail.ru", "password1"))
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(updateUser4.toString()))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.firstName").value("newName1"))
+//                .andExpect(jsonPath("$.lastName").value("newSurname"))
+//                .andExpect(jsonPath("$.phone").value("+722222222223"));
     }
 
     @DisplayName("Изменение данных - короткое имя")

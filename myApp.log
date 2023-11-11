@@ -1,0 +1,12 @@
+14:54:54.592 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+14:54:54.604 [main] INFO  r.s.h.service.impl.UserServiceImpl - Данные пользователя user1@mail.ru изменены
+14:54:54.713 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+14:54:54.717 [main] INFO  r.s.h.service.impl.UserServiceImpl - Данные пользователя user1@mail.ru изменены
+14:56:47.668 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+14:56:47.672 [main] INFO  r.s.h.service.impl.UserServiceImpl - Данные пользователя user1@mail.ru изменены
+14:58:25.738 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+14:58:25.752 [main] INFO  r.s.h.service.impl.UserServiceImpl - Данные пользователя user1@mail.ru изменены
+14:59:19.476 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+14:59:19.489 [main] INFO  r.s.h.service.impl.UserServiceImpl - Данные пользователя user1@mail.ru изменены
+15:00:46.892 [main] INFO  r.s.h.service.impl.UserServiceImpl - Пользователь user1@mail.ru авторизован
+15:00:46.897 [main] INFO  r.s.h.service.impl.UserServiceImpl - Данные пользователя user1@mail.ru изменены
