@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: dmitrii_gienko
+      changes:
+        - createTable:
+            tableName: image
+            columns:
+              - column:
+                  name: image_id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: bytes
+                  type: BYTEA

@@ -1,9 +1,15 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.dto.Register;
+import org.springframework.http.ResponseEntity;
+import ru.skypro.homework.projections.Login;
+import ru.skypro.homework.projections.Register;
 
 public interface AuthService {
-    boolean login(String userName, String password);
+    boolean validLogin(String userName, String password);
 
-    boolean register(Register register);
+    boolean validRegister(Register register);
+
+    ResponseEntity<?> getRegistration(Register register);
+
+    ResponseEntity<?> getLogin(Login login);
 }
